@@ -6,7 +6,6 @@ from projection import projection as proj
 
 # the container class, functioning as a circle road
 class Container:
-    circle = 1000
     lastControl = 0.0
     lastDescent = 0.0
     lastChange = 0.0
@@ -23,6 +22,9 @@ class Container:
     controlWeight = ones(8) * 0.7
     totalInflow = 3.8
 
+    # initialize circle length
+    def __init__(self, l=1000):
+        self.circle = l
 
     # normalization
     def Normalize(self, v):
@@ -34,7 +36,6 @@ class Container:
         inflowVector = self.InflowVecotor()
         error = dot(inflowVector, self.controlWeight) - self.AverageExitFlow()
         self.controlWeight = self.controlWeight - 3.0 * inflowVector * error
-        #print ' '.join(map(str, list(self.controlWeight) + [self.AverageExitFlow()]))
 
 
     # optimize x based on w, add a e-greedy direction, then do projection
@@ -216,7 +217,7 @@ class Container:
         self.move(delta)
         self.fresh()
         self.kickOut(time, delta)
-        if self.IsStable(time):
-            self.Approximation()
-            self.DualAscent(time)
+        #if self.IsStable(time):
+        #    self.Approximation()
+        #    self.DualAscent(time)
         self.ABControl(time)

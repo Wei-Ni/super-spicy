@@ -31,6 +31,12 @@ class Container:
         return v / sum(v)
 
 
+    # learing Q function
+    def sarsa(self):
+
+        return 0
+
+
     # stochastic gradient descent, update vector w
     def Approximation(self):
         inflowVector = self.InflowVecotor()

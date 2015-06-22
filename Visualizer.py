@@ -6,17 +6,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.animation as animation
 
-road = Container(2000)
+road = Container(1000)
 ratio = 4.0
 
-road.addController(Controller(road,  20*2, 0.1 * ratio, 645*2, 15.0, 10.0,  7.0))#
-road.addController(Controller(road, 145*2, 0.1 * ratio, 395*2, 15.0, 10.0, 16.0))
-road.addController(Controller(road, 270*2, 0.1 * ratio, 520*2, 15.0, 10.0, 14.0))
-road.addController(Controller(road, 395*2, 0.1 * ratio, 645*2, 15.0, 10.0,  9.0))
-road.addController(Controller(road, 520*2, 0.1 * ratio, 770*2, 15.0, 10.0, 21.0))
-road.addController(Controller(road, 645*2, 0.1 * ratio, 895*2, 15.0, 10.0,  2.0))
-road.addController(Controller(road, 770*2, 0.1 * ratio,  20*2, 15.0, 10.0,  4.0))
-road.addController(Controller(road, 895*2, 0.1 * ratio, 145*2, 15.0, 10.0,  5.0))
+road.addController(Controller(road,  20, 0.1 * ratio, 645, 15.0, 10.0,  7.0))#
+road.addController(Controller(road, 145, 0.1 * ratio, 395, 15.0, 10.0, 16.0))
+road.addController(Controller(road, 270, 0.1 * ratio, 520, 15.0, 10.0, 14.0))
+road.addController(Controller(road, 395, 0.1 * ratio, 645, 15.0, 10.0,  9.0))
+road.addController(Controller(road, 520, 0.1 * ratio, 770, 15.0, 10.0, 21.0))
+road.addController(Controller(road, 645, 0.1 * ratio, 895, 15.0, 10.0,  2.0))
+road.addController(Controller(road, 770, 0.1 * ratio,  20, 15.0, 10.0,  4.0))
+road.addController(Controller(road, 895, 0.1 * ratio, 145, 15.0, 10.0,  5.0))
 
 def movingaverage(values,window):
     weigths = np.repeat(1.0, window)/window
@@ -34,6 +34,7 @@ time = 0
 
 fig, ax = plt.subplots(figsize=(8,8))
 radius = road.circle/np.pi/2 + 1
+
 """
 ax.plot([np.sin(i) * (radius + 10) for i in np.linspace(0,2*np.pi,100)],
         [np.cos(i) * (radius + 10) for i in np.linspace(0,2*np.pi,100)],'k')

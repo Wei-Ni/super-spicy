@@ -19,8 +19,13 @@ class Container:
     controlPoint = []
     accRange = (60.0, 80.0)
     controlVector = ones(8) / 8.0
-    controlWeight = ones(8) * 0.7
+    controlWeight = ones(8) * 1.4
     totalInflow = 3.8
+
+    gamma, lmbda = 0.5, 0.5
+    alpha = 3.0
+    momentum = zeros(8)
+
 
     # initialize circle length
     def __init__(self, l=1000):
@@ -31,15 +36,32 @@ class Container:
         return v / sum(v)
 
 
+    # Q function
+    def Q(self, vector):
+        return dot(vector, self.controlWeight)
+
+
     # learing Q function
-    def sarsa(self):
+    def sarsa(self, time):
+
+        lastvector = self.InflowVector()
+        optimalvector = proj(self.controlWeight, 1.0)
+
+        if rand() < 0.8 * (1 - time / 20000):
+            self.controlVector = proj(self.controlWeight + 0.05 * randn(8), 1.0)
+        else:
+            self.controlVector = optimalvector
+
+        deltaK = self.Q(lastvector) - (self.gamma * self.Q(optimalvector) + self.AverageExitFlow())
+        self.momentum = self.lmbda * self.gamma * self.momentum + lastvector
+        self.controlWeight = self.controlWeight - self.alpha * self.momentum * deltaK
 
         return 0
 
 
     # stochastic gradient descent, update vector w
     def Approximation(self):
-        inflowVector = self.InflowVecotor()
+        inflowvector = self.InflowVector()
         error = dot(inflowVector, self.controlWeight) - self.AverageExitFlow()
         self.controlWeight = self.controlWeight - 3.0 * inflowVector * error
 
@@ -59,7 +81,7 @@ class Container:
 
 
     # return the actual inflow distribution of the past epoch
-    def InflowVecotor(self):
+    def InflowVector(self):
         res = zeros(8)
         for i in xrange(8):
             res[i] = sum(self.control[i].actualInflow[-250:])
@@ -224,6 +246,5 @@ class Container:
         self.fresh()
         self.kickOut(time, delta)
         if self.IsStable(time):
-            self.Approximation()
-            self.DualAscent(time)
+            self.sarsa(time)
         self.ABControl(time)

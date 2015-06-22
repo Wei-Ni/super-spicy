@@ -223,7 +223,7 @@ class Container:
         self.move(delta)
         self.fresh()
         self.kickOut(time, delta)
-        #if self.IsStable(time):
-        #    self.Approximation()
-        #    self.DualAscent(time)
+        if self.IsStable(time):
+            self.Approximation()
+            self.DualAscent(time)
         self.ABControl(time)

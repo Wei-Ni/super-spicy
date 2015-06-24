@@ -3,6 +3,7 @@ from Container import *
 
 class Controller:
 
+
     def __init__(self, container, position, flow, destination, green, red, initial):
         self.container = container
         self.position = position
@@ -13,6 +14,7 @@ class Controller:
         self.red = red
         self.initial = initial
         self.actualInflow = []
+
 
     def onRamp(self, time):
         res = 0.0
@@ -29,6 +31,7 @@ class Controller:
                 res = 1.0
         self.actualInflow.append(res)
         return res
+
 
     def signal(self, time):
         local = time + self.initial

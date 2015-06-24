@@ -5,31 +5,25 @@ from projection import projection as proj
 
 
 # the container class, functioning as a circle road
+
 class Container:
-    lastControl = 0.0
-    lastDescent = 0.0
-    lastChange = 0.0
-    road = []
-    control = []
-    exitSeries = []
-    accumulation = []
-    speed = []
-    inFlow = []
-    actualInflow = []
-    controlPoint = []
+
+    lastControl, lastDescent, lastChange = 0.0, 0.0, 0.0
+    road, control, exitSeries = [], [], []
+    accumulation, speed, inFlow = [], [], []
+    actualInflow, controlPoint = [], []
     accRange = (60.0, 80.0)
     controlVector = ones(8) / 8.0
     controlWeight = ones(8) * 1.4
     totalInflow = 3.8
-
-    gamma, lmbda = 0.5, 0.5
-    alpha = 3.0
+    gamma, lmbda, alpha = 0.5, 0.5, 3.0
     momentum = zeros(8)
 
 
     # initialize circle length
     def __init__(self, l=1000):
         self.circle = l
+
 
     # normalization
     def Normalize(self, v):
@@ -228,13 +222,13 @@ class Container:
                 return i
 
 
-    # change control vector at certain time point
     # only for experiment, no trick
     def ChangeVector(self, time):
         if time > 8000:
             self.controlVector = ones(8) / 8.0
             self.controlVector[0] = 0.02
             self.controlVector = self.Normalize(self.controlVector)
+
 
     # bunch all the functions together
     def run(self, time, delta):

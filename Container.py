@@ -12,22 +12,42 @@ class Container:
     road, control, exitSeries = [], [], []
     accumulation, speed, inFlow = [], [], []
     actualInflow, controlPoint = [], []
-    accRange = (60.0, 80.0)
+    accRange = [110,130] #[60.0, 80.0]
     controlVector = ones(8) / 8.0
     controlWeight = ones(8) * 1.4
+    accumVector = ones(8)
     totalInflow = 3.8
     gamma, lmbda, alpha = 0.5, 0.5, 3.0
     momentum = zeros(8)
 
 
     # initialize circle length
-    def __init__(self, l=1000):
+    def __init__(self, l=1000.0):
         self.circle = l
 
 
     # normalization
     def Normalize(self, v):
-        return v / sum(v)
+        return v / (1e-6 + sum(v))
+
+
+    # determine if a vehicle is within the mesuring range
+    def within(self, position, interval):
+        if interval[1] > interval[0]:
+            return position > interval[0] and position < interval[1]
+        else:
+            return position > interval[0] or position < interval[1]
+
+
+    # compute the state vector
+    def statesVector(self):
+        onrampPositions = [i.position for i in self.control]
+        shiftedPositions = onrampPositions[1:] + [onrampPositions[0]]
+        measureInterval = zip(onrampPositions, shiftedPositions)
+        for i, interval in enumerate(measureInterval):
+            self.accumVector[i] = 1.0 * len([v for v in self.road if self.within(v._position, interval)])
+
+        self.accumVector = self.Normalize(self.accumVector)
 
 
     # Q function
@@ -118,7 +138,7 @@ class Container:
 
     # should I reduce inflow now?
     def ShouldDecrease(self, num, deltaAcc):
-        return num > self.accRange[1] and deltaAcc > 2
+        return num > self.accRange[1] and deltaAcc > 0 #TODO #deltaAcc > 2
 
 
     # should I increase inflow now?
@@ -222,14 +242,6 @@ class Container:
                 return i
 
 
-    # only for experiment, no trick
-    def ChangeVector(self, time):
-        if time > 8000:
-            self.controlVector = ones(8) / 8.0
-            self.controlVector[0] = 0.02
-            self.controlVector = self.Normalize(self.controlVector)
-
-
     # bunch all the functions together
     def run(self, time, delta):
         actualInflow = 0.0
@@ -239,6 +251,7 @@ class Container:
         self.move(delta)
         self.fresh()
         self.kickOut(time, delta)
-        if self.IsStable(time):
-            self.sarsa(time)
+        self.statesVector()
+        #if self.IsStable(time):
+        #    self.sarsa(time)
         self.ABControl(time)

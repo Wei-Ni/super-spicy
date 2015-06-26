@@ -6,17 +6,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.animation as animation
 
-road = Container(1000)
+road = Container(5000)
 ratio = 4.0
 
-road.addController(Controller(road,  20, 0.1 * ratio, 645, 15.0, 10.0,  7.0))#
-road.addController(Controller(road, 145, 0.1 * ratio, 395, 15.0, 10.0, 16.0))
-road.addController(Controller(road, 270, 0.1 * ratio, 520, 15.0, 10.0, 14.0))
-road.addController(Controller(road, 395, 0.1 * ratio, 645, 15.0, 10.0,  9.0))
-road.addController(Controller(road, 520, 0.1 * ratio, 770, 15.0, 10.0, 21.0))
-road.addController(Controller(road, 645, 0.1 * ratio, 895, 15.0, 10.0,  2.0))
-road.addController(Controller(road, 770, 0.1 * ratio,  20, 15.0, 10.0,  4.0))
-road.addController(Controller(road, 895, 0.1 * ratio, 145, 15.0, 10.0,  5.0))
+road.addController(Controller(road,  20*5, 0.1 * ratio, 645*5, 15.0, 10.0,  7.0))#
+road.addController(Controller(road, 145*5, 0.1 * ratio, 770*5, 15.0, 10.0, 16.0))#
+road.addController(Controller(road, 270*5, 0.1 * ratio, 520*5, 15.0, 10.0, 14.0))
+road.addController(Controller(road, 395*5, 0.1 * ratio, 645*5, 15.0, 10.0,  9.0))
+road.addController(Controller(road, 520*5, 0.1 * ratio, 770*5, 15.0, 10.0, 21.0))
+road.addController(Controller(road, 645*5, 0.1 * ratio, 895*5, 15.0, 10.0,  2.0))
+road.addController(Controller(road, 770*5, 0.1 * ratio,  20*5, 15.0, 10.0,  4.0))
+road.addController(Controller(road, 895*5, 0.1 * ratio, 145*5, 15.0, 10.0,  5.0))
 
 def movingaverage(values,window):
     weigths = np.repeat(1.0, window)/window

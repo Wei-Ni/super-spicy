@@ -252,6 +252,6 @@ class Container:
         self.fresh()
         self.kickOut(time, delta)
         self.statesVector()
-        #if self.IsStable(time):
-        #    self.sarsa(time)
+        if self.IsStable(time):
+            self.sarsa(time)
         self.ABControl(time)

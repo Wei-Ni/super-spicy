@@ -6,17 +6,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.animation as animation
 
-road = Container(5000)
+road = Container(10000)
 ratio = 4.0
 
-road.addController(Controller(road,  20*5, 0.1 * ratio, 645*5, 15.0, 10.0,  7.0))#
-road.addController(Controller(road, 145*5, 0.1 * ratio, 770*5, 15.0, 10.0, 16.0))#
-road.addController(Controller(road, 270*5, 0.1 * ratio, 520*5, 15.0, 10.0, 14.0))
-road.addController(Controller(road, 395*5, 0.1 * ratio, 645*5, 15.0, 10.0,  9.0))
-road.addController(Controller(road, 520*5, 0.1 * ratio, 770*5, 15.0, 10.0, 21.0))
-road.addController(Controller(road, 645*5, 0.1 * ratio, 895*5, 15.0, 10.0,  2.0))
-road.addController(Controller(road, 770*5, 0.1 * ratio,  20*5, 15.0, 10.0,  4.0))
-road.addController(Controller(road, 895*5, 0.1 * ratio, 145*5, 15.0, 10.0,  5.0))
+road.addController(Controller(road,  20*10, 0.1 * ratio, 645*10, 15.0, 10.0,  7.0))#
+road.addController(Controller(road, 145*10, 0.1 * ratio, 770*10, 15.0, 10.0, 16.0))#
+road.addController(Controller(road, 270*10, 0.1 * ratio, 520*10, 15.0, 10.0, 14.0))
+road.addController(Controller(road, 395*10, 0.1 * ratio, 645*10, 15.0, 10.0,  9.0))
+road.addController(Controller(road, 520*10, 0.1 * ratio, 770*10, 15.0, 10.0, 21.0))
+road.addController(Controller(road, 645*10, 0.1 * ratio, 895*10, 15.0, 10.0,  2.0))
+road.addController(Controller(road, 770*10, 0.1 * ratio,  20*10, 15.0, 10.0,  4.0))
+road.addController(Controller(road, 895*10, 0.1 * ratio, 145*10, 15.0, 10.0,  5.0))
 
 def movingaverage(values,window):
     weigths = np.repeat(1.0, window)/window
@@ -73,6 +73,8 @@ dat_3 = movingaverage(np.array(road.inFlow),100)
 dat_4 = movingaverage(np.array(road.speed),100)
 dat_5 = movingaverage(np.array(road.actualInflow),100)
 dat_6 = np.array(road.controlPoint)
+dat_7 = np.array(road.statusVector)
+dat_8 = np.array(road.meteringVector)
 zip_dat = zip(dat_1, dat_2)
 
 y = dat_2
@@ -92,3 +94,5 @@ np.savetxt("exit.txt", np.array(dat_2))
 np.savetxt("in.txt", np.array(dat_3))
 np.savetxt("speed.txt", np.array(dat_4))
 np.savetxt("controlPoint.txt", dat_6)
+np.savetxt("meteringVector.txt", dat_8)
+np.savetxt("statusVector.txt", dat_7)

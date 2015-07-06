@@ -12,7 +12,8 @@ class Container:
     road, control, exitSeries = [], [], []
     accumulation, speed, inFlow = [], [], []
     actualInflow, controlPoint = [], []
-    accRange = [110,130] #[60.0, 80.0]
+    meteringVector, statusVector = [], []
+    accRange = [200,220] #[110,130] #[60.0, 80.0]
     controlVector = ones(8) / 8.0
     controlWeight = ones(8) * 1.4
     accumVector = ones(8)
@@ -60,6 +61,10 @@ class Container:
 
         lastvector = self.InflowVector()
         optimalvector = proj(self.controlWeight, 1.0)
+
+        # logging
+        self.statusVector.append(self.statesVector())
+        self.meteringVector.append(lastvector)
 
         if rand() < 0.8 * (1 - time / 20000):
             self.controlVector = proj(self.controlWeight + 0.05 * randn(8), 1.0)

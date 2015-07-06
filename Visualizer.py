@@ -6,17 +6,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.animation as animation
 
-road = Container(10000)
+road = Container(20000)
 ratio = 4.0
 
-road.addController(Controller(road,  20*10, 0.1 * ratio, 645*10, 15.0, 10.0,  7.0))#
-road.addController(Controller(road, 145*10, 0.1 * ratio, 770*10, 15.0, 10.0, 16.0))#
-road.addController(Controller(road, 270*10, 0.1 * ratio, 520*10, 15.0, 10.0, 14.0))
-road.addController(Controller(road, 395*10, 0.1 * ratio, 645*10, 15.0, 10.0,  9.0))
-road.addController(Controller(road, 520*10, 0.1 * ratio, 770*10, 15.0, 10.0, 21.0))
-road.addController(Controller(road, 645*10, 0.1 * ratio, 895*10, 15.0, 10.0,  2.0))
-road.addController(Controller(road, 770*10, 0.1 * ratio,  20*10, 15.0, 10.0,  4.0))
-road.addController(Controller(road, 895*10, 0.1 * ratio, 145*10, 15.0, 10.0,  5.0))
+road.addController(Controller(road,  20*20, 0.1 * ratio, 645*20, 15.0, 10.0,  7.0))#
+road.addController(Controller(road, 145*20, 0.1 * ratio, 770*20, 15.0, 10.0, 16.0))#
+road.addController(Controller(road, 270*20, 0.1 * ratio, 520*20, 15.0, 10.0, 14.0))
+road.addController(Controller(road, 395*20, 0.1 * ratio, 645*20, 15.0, 10.0,  9.0))
+road.addController(Controller(road, 520*20, 0.1 * ratio, 770*20, 15.0, 10.0, 21.0))
+road.addController(Controller(road, 645*20, 0.1 * ratio, 895*20, 15.0, 10.0,  2.0))
+road.addController(Controller(road, 770*20, 0.1 * ratio,  20*20, 15.0, 10.0,  4.0))
+road.addController(Controller(road, 895*20, 0.1 * ratio, 145*20, 15.0, 10.0,  5.0))
 
 def movingaverage(values,window):
     weigths = np.repeat(1.0, window)/window
@@ -32,8 +32,8 @@ def circleMapping(container):
 
 time = 0
 
-fig, ax = plt.subplots(figsize=(8,8))
-radius = road.circle/np.pi/2 + 1
+#fig, ax = plt.subplots(figsize=(8,8))
+#radius = road.circle/np.pi/2 + 1
 
 """
 ax.plot([np.sin(i) * (radius + 10) for i in np.linspace(0,2*np.pi,100)],
@@ -77,17 +77,17 @@ dat_7 = np.array(road.statusVector)
 dat_8 = np.array(road.meteringVector)
 zip_dat = zip(dat_1, dat_2)
 
-y = dat_2
-t = np.linspace(0, y.shape[0], y.shape[0])
+#y = dat_2
+#t = np.linspace(0, y.shape[0], y.shape[0])
 
-ax.plot(t, y, 'r')
+#ax.plot(t, y, 'r')
 
-ax2 = ax.twinx()
-t = np.linspace(0, dat_1.shape[0], dat_1.shape[0])
-ax2.plot(t, dat_1, 'b')
+#ax2 = ax.twinx()
+#t = np.linspace(0, dat_1.shape[0], dat_1.shape[0])
+#ax2.plot(t, dat_1, 'b')
 
-plt.grid()
-plt.show()
+#plt.grid()
+#plt.show()
 
 np.savetxt("acc.txt", np.array(dat_1))
 np.savetxt("exit.txt", np.array(dat_2))

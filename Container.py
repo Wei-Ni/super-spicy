@@ -13,12 +13,12 @@ class Container:
     accumulation, speed, inFlow = [], [], []
     actualInflow, controlPoint = [], []
     meteringVector, statusVector = [], []
-    accRange = [200,220] #[110,130] #[60.0, 80.0]
+    accRange = [310,330]#[200,220]#[110,130] #[60.0, 80.0]
     controlVector = ones(8) / 8.0
     controlWeight = ones(8) * 1.4
     accumVector = ones(8)
     totalInflow = 3.8
-    gamma, lmbda, alpha = 0.5, 0.5, 3.0
+    gamma, lmbda, alpha = 0.5, 0.9, 3.0
     momentum = zeros(8)
 
 
@@ -64,10 +64,10 @@ class Container:
 
         # logging
         self.statusVector.append(self.statesVector())
-        self.meteringVector.append(lastvector)
+        self.meteringVector.append(self.controlVector)
 
         if rand() < 0.8 * (1 - time / 20000):
-            self.controlVector = proj(self.controlWeight + 0.05 * randn(8), 1.0)
+            self.controlVector = proj(self.controlWeight + 0.06 * randn(8), 1.0)
         else:
             self.controlVector = optimalvector
 

@@ -13,7 +13,7 @@ class Container:
     accumulation, speed, inFlow = [], [], []
     actualInflow, controlPoint = [], []
     meteringVector, statusVector = [], []
-    accRange = [310,330]#[200,220]#[110,130] #[60.0, 80.0]
+    accRange = [300,320]#[200,220]#[110,130] #[60.0, 80.0]
     controlVector = ones(8) / 8.0
     controlWeight = ones(8) * 1.4
     accumVector = ones(8)

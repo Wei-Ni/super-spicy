@@ -213,7 +213,6 @@ class Container:
 
     # excute car following for every vehicle in this container
     def move(self, delta):
-        pool = ThreadPool()
         pool = ThreadPool(4)
         pool.map(lambda x: x.carFollowing(self, delta), self.road)
         pool.close()

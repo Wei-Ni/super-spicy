@@ -213,12 +213,7 @@ class Container:
 
     # excute car following for every vehicle in this container
     def move(self, delta):
-        pool = ThreadPool(4)
-        pool.map(lambda x: x.carFollowing(self, delta), self.road)
-        pool.close()
-        pool.join()
-
-        #for i in self.road: i.carFollowing(self, delta)
+        for i in self.road: i.carFollowing(self, delta)
 
 
     # fresh the position and speed of every vehicle in this container

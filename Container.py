@@ -217,7 +217,6 @@ class Container:
         pool.map(lambda x: x.carFollowing(self, delta), self.road)
         pool.close()
         pool.join()
-
         #for i in self.road: i.carFollowing(self, delta)
 
 

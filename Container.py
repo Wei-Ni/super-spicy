@@ -1,5 +1,7 @@
 from numpy import array, ones, zeros, mean, exp, std, dot, linspace
 from numpy.random import rand, randn
+from multiprocessing import Pool
+from multiprocessing.dummy import Pool as ThreadPool
 from Vehicle import *
 from projection import projection as proj
 
@@ -211,7 +213,13 @@ class Container:
 
     # excute car following for every vehicle in this container
     def move(self, delta):
-        for i in self.road: i.carFollowing(self, delta)
+        pool = ThreadPool()
+        pool = ThreadPool(4)
+        pool.map(lambda x: x.carFollowing(self, delta), self.road)
+        pool.close()
+        pool.join()
+
+        #for i in self.road: i.carFollowing(self, delta)
 
 
     # fresh the position and speed of every vehicle in this container

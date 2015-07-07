@@ -59,12 +59,12 @@ class Container:
     # learing Q function
     def sarsa(self, time):
 
+	# logging
+        self.meteringVector.append(self.controlVector)
+	self.statusVector.append(self.accumVector)
+
         lastvector = self.InflowVector()
         optimalvector = proj(self.controlWeight, 1.0)
-
-        # logging
-        self.statusVector.append(self.statesVector())
-        self.meteringVector.append(self.controlVector)
 
         if rand() < 0.8 * (1 - time / 20000):
             self.controlVector = proj(self.controlWeight + 0.06 * randn(8), 1.0)
@@ -143,7 +143,7 @@ class Container:
 
     # should I reduce inflow now?
     def ShouldDecrease(self, num, deltaAcc):
-        return num > self.accRange[1] and deltaAcc > 0 #TODO #deltaAcc > 2
+        return num > self.accRange[1] #and deltaAcc > 0 #TODO #deltaAcc > 2
 
 
     # should I increase inflow now?
@@ -256,7 +256,7 @@ class Container:
         self.move(delta)
         self.fresh()
         self.kickOut(time, delta)
-        self.statesVector()
         if self.IsStable(time):
+            self.statesVector()
             self.sarsa(time)
         self.ABControl(time)

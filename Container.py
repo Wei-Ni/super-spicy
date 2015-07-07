@@ -143,7 +143,7 @@ class Container:
 
     # should I reduce inflow now?
     def ShouldDecrease(self, num, deltaAcc):
-        return num > self.accRange[1] #and deltaAcc > 0 #TODO #deltaAcc > 2
+        return num > self.accRange[1] #and deltaAcc > 0 #deltaAcc > 2
 
 
     # should I increase inflow now?
@@ -158,7 +158,7 @@ class Container:
 
     # decreasement of total inflow
     def FlowDecrease(self, overflow, deltaAcc, num):
-        return 2.0/(1.0+exp(deltaAcc * 0.025 + overflow * 0.045))
+        return 2.0/(1.0+exp(max(deltaAcc,0) * 0.025 + overflow * 0.055))
 
 
     # increasement of  total inflow

@@ -75,6 +75,7 @@ dat_5 = movingaverage(np.array(road.actualInflow),100)
 dat_6 = np.array(road.controlPoint)
 dat_7 = np.array(road.statusVector)
 dat_8 = np.array(road.meteringVector)
+dat_9 = np.array(road.aggregatedExit)
 zip_dat = zip(dat_1, dat_2)
 
 #y = dat_2
@@ -96,3 +97,4 @@ np.savetxt("speed.txt", np.array(dat_4))
 np.savetxt("controlPoint.txt", dat_6)
 np.savetxt("meteringVector.txt", dat_8)
 np.savetxt("statusVector.txt", dat_7)
+np.savetxt("aggregatedExit.txt", dat_9)

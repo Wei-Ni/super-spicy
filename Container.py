@@ -14,8 +14,8 @@ class Container:
     road, control, exitSeries = [], [], []
     accumulation, speed, inFlow = [], [], []
     actualInflow, controlPoint = [], []
-    meteringVector, statusVector = [], []
-    accRange = [200,220]#[110,130] #[60.0, 80.0]
+    meteringVector, statusVector, aggregatedExit = [], [], []
+    accRange = [280,300] #[200,220]#[110,130]#[60,80]
     controlVector = ones(8) / 8.0
     controlWeight = ones(8) * 1.4
     accumVector = ones(8)
@@ -60,13 +60,15 @@ class Container:
     # learing Q function
     def sarsa(self, time):
 
-	# logging
-        self.meteringVector.append(self.InflowVector())
-	self.statusVector.append(self.accumVector)
-
-
-        lastvector = self.InflowVector()
+        lastvector, actualTotalInflow = self.InflowVector()
         optimalvector = proj(self.controlWeight, 1.0)
+
+        # snapshoot
+        accumulationNow = mean(self.accumulation[-25:])
+        self.meteringVector.append(lastvector * actualTotalInflow)
+        self.statusVector.append(self.accumVector * accumulationNow)
+        self.aggregatedExit.append(self.AverageExitFlow())
+        # snapshot
 
         if rand() < 0.8 * (1 - time / 20000):
             self.controlVector = proj(self.controlWeight + 0.06 * randn(8), 1.0)
@@ -106,7 +108,7 @@ class Container:
         res = zeros(8)
         for i in xrange(8):
             res[i] = sum(self.control[i].actualInflow[-250:])
-        return res / sum(res)
+        return res / sum(res), sum(res)
 
 
     # return the total exit flow of the past period

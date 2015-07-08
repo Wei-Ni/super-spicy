@@ -15,7 +15,7 @@ class Container:
     accumulation, speed, inFlow = [], [], []
     actualInflow, controlPoint = [], []
     meteringVector, statusVector = [], []
-    accRange = [300,320]#[200,220]#[110,130] #[60.0, 80.0]
+    accRange = [200,220]#[110,130] #[60.0, 80.0]
     controlVector = ones(8) / 8.0
     controlWeight = ones(8) * 1.4
     accumVector = ones(8)
@@ -32,7 +32,6 @@ class Container:
     # normalization
     def Normalize(self, v):
         return v / (1e-6 + sum(v))
-
 
     # determine if a vehicle is within the mesuring range
     def within(self, position, interval):
@@ -62,8 +61,9 @@ class Container:
     def sarsa(self, time):
 
 	# logging
-        self.meteringVector.append(self.controlVector)
+        self.meteringVector.append(self.InflowVector())
 	self.statusVector.append(self.accumVector)
+
 
         lastvector = self.InflowVector()
         optimalvector = proj(self.controlWeight, 1.0)
@@ -145,7 +145,7 @@ class Container:
 
     # should I reduce inflow now?
     def ShouldDecrease(self, num, deltaAcc):
-        return num > self.accRange[1] #and deltaAcc > 0 #deltaAcc > 2
+        return num > self.accRange[1] and deltaAcc > 2
 
 
     # should I increase inflow now?
@@ -160,7 +160,7 @@ class Container:
 
     # decreasement of total inflow
     def FlowDecrease(self, overflow, deltaAcc, num):
-        return 2.0/(1.0+exp(max(deltaAcc,0) * 0.025 + overflow * 0.055))
+        return 2.0/(1.0+exp(deltaAcc * 0.025 + overflow * 0.045))
 
 
     # increasement of  total inflow

@@ -128,7 +128,6 @@ class Container:
         if begin > 0 and time - self.lastDescent > 250:
             slices = self.inFlow[begin:end]
             ratio = std(slices) / mean(slices)
-            #if ratio < 1.5e-2:
             if True:
                 self.lastDescent = time
                 return True
@@ -140,7 +139,7 @@ class Container:
     def Information(self):
         num = mean(self.accumulation[-25:])
         deltaAcc = num - mean(self.accumulation[-40:-15])
-        overflow = pow(max(0,(num - self.accRange[1])) / self.accRange[1], 0.5)
+        overflow = pow(max(0,(num - self.accRange[1])) / self.accRange[1], 1.0)
         underflow = max(0,(self.accRange[0] - num)) / self.accRange[0]
         return (num, deltaAcc, overflow, underflow)
 

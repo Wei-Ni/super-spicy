@@ -8,6 +8,8 @@ from projection import projection as proj
 
 class Container:
 
+    simulationTime = 20000
+    ABInterval, RLInterval = 25, 250
     lastControl, lastDescent, lastChange = 0.0, 0.0, 0.0
     road, control, exitSeries = [], [], []
     accumulation, speed, inFlow = [], [], []
@@ -18,7 +20,7 @@ class Container:
     controlWeight = ones(8) * 1.4
     accumVector = ones(8)
     totalInflow = 3.8
-    gamma, lmbda, alpha = 0.5, 0.9, 3.0
+    gamma, lmbda, alpha, epsilon = 0.5, 0.9, 3.0, 0.06
     momentum = zeros(8)
 
 
@@ -30,6 +32,7 @@ class Container:
     # normalization
     def Normalize(self, v):
         return v / (1e-6 + sum(v))
+
 
     # determine if a vehicle is within the mesuring range
     def within(self, position, interval):
@@ -62,14 +65,14 @@ class Container:
         optimalvector = proj(self.controlWeight, 1.0)
 
         # snapshoot
-        accumulationNow = mean(self.accumulation[-25:])
-        self.meteringVector.append(lastvector * actualTotalInflow)
-        self.statusVector.append(self.accumVector * accumulationNow)
-        self.aggregatedExit.append(self.AverageExitFlow())
+        accumulationNow = mean(self.accumulation[-1:]) # only for one simulation interval
+        self.statusVector.append(self.accumVector * accumulationNow) # only for one simulation interval
+        self.aggregatedExit.append(self.AverageExitFlow()) # averaged over the past RLInterval
+        self.meteringVector.append(lastvector * actualTotalInflow) # averaged over the past RLInterval
         # snapshot
 
-        if rand() < 0.8 * (1 - time / 20000):
-            self.controlVector = proj(self.controlWeight + 0.06 * randn(8), 1.0)
+        if rand() < 0.8 * (1 - time / self.simulationTime):
+            self.controlVector = proj(self.controlWeight + self.epsilon * randn(8), 1.0)
         else:
             self.controlVector = optimalvector
 
@@ -80,50 +83,34 @@ class Container:
         return 0
 
 
-    # stochastic gradient descent, update vector w
-    def Approximation(self):
-        inflowvector = self.InflowVector()
-        error = dot(inflowVector, self.controlWeight) - self.AverageExitFlow()
-        self.controlWeight = self.controlWeight - 3.0 * inflowVector * error
-
-
-    # optimize x based on w, add a e-greedy direction, then do projection
-    def DualAscent(self, time):
-        optimalDirection = proj(self.controlWeight, 1.0)
-        if rand() < 0.8 * (1 - time / 20000):
-            self.controlVector = proj(self.controlWeight + 0.05 * randn(8), 1.0)
-        else:
-            self.controlVector = optimalDirection
-
-
     # return the ordered in flow of the past period
     def AverageOrderFlow(self):
-        return mean(self.inFlow[-250:])
+        return mean(self.inFlow[-self.RLInterval:])
 
 
     # return the actual inflow distribution of the past epoch
     def InflowVector(self):
         res = zeros(8)
         for i in xrange(8):
-            res[i] = sum(self.control[i].actualInflow[-250:])
+            res[i] = sum(self.control[i].actualInflow[-self.RLInterval:])
         return res / sum(res), sum(res)
 
 
     # return the total exit flow of the past period
     def AverageExitFlow(self):
-        return mean(self.exitSeries[-250:])
+        return mean(self.exitSeries[-self.RLInterval:])
 
 
     # return the average actual inflow of the past period
     def AverageActualInflow(self):
-        return mean(self.actualInflow[-250:])
+        return mean(self.actualInflow[-self.RLInterval:])
 
 
     # detecte stable states
     def IsStable(self, time):
         end = int(time / 0.98)
         begin = max(0, end - 150)
-        if begin > 0 and time - self.lastDescent > 250:
+        if begin > 0 and time - self.lastDescent > self.RLInterval:
             slices = self.inFlow[begin:end]
             ratio = std(slices) / mean(slices)
             if True:
@@ -133,10 +120,14 @@ class Container:
         else: return False
 
 
+    ############################################################
+    # functions for AB control
+    ############################################################
+
     # provide the macro level information of the whole system
     def Information(self):
-        num = mean(self.accumulation[-25:])
-        deltaAcc = num - mean(self.accumulation[-40:-15])
+        num = mean(self.accumulation[-self.ABInterval:])
+        deltaAcc = num - mean(self.accumulation[-self.ABInterval-15:-15])
         overflow = pow(max(0,(num - self.accRange[1])) / self.accRange[1], 1.0)
         underflow = max(0,(self.accRange[0] - num)) / self.accRange[0]
         return (num, deltaAcc, overflow, underflow)

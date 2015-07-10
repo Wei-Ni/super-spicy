@@ -9,7 +9,7 @@ from projection import projection as proj
 class Container:
 
     simulationTime = 20000
-    ABInterval, RLInterval = 25, 250
+    ABInterval, RLInterval = 25, 100
     lastControl, lastDescent, lastChange = 0.0, 0.0, 0.0
     road, control, exitSeries = [], [], []
     accumulation, speed, inFlow = [], [], []
@@ -20,7 +20,7 @@ class Container:
     controlWeight = ones(8) * 1.4
     accumVector = ones(8)
     totalInflow = 3.8
-    gamma, lmbda, alpha, epsilon = 0.5, 0.9, 3.0, 0.06
+    gamma, lmbda, alpha, epsilon = 0.5, 0.95, 3.0, 0.06
     momentum = zeros(8)
 
 

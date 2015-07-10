@@ -1,7 +1,5 @@
 from numpy import array, ones, zeros, mean, exp, std, dot, linspace
 from numpy.random import rand, randn
-from multiprocessing import Pool
-from multiprocessing.dummy import Pool as ThreadPool
 from Vehicle import *
 from projection import projection as proj
 

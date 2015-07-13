@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.animation as animation
 
-road = Container(20000)
+duration = 20000
+road = Container(20000, duration)
 ratio = 4.0
 
 road.addController(Controller(road,  20*20, 0.1 * ratio, 645*20, 15.0, 10.0,  7.0))#
@@ -63,7 +64,7 @@ def data_gen():
 ani = animation.FuncAnimation(fig, update, data_gen, interval = 50)
 
 """
-for i in xrange(20000):
+for i in xrange(duration):
     road.run(time, 0.98)
     time += 0.98
 

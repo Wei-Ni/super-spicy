@@ -8,7 +8,6 @@ from projection import projection as proj
 
 class Container:
 
-    simulationTime = 20000
     ABInterval, RLInterval = 25, 100
     lastControl, lastDescent, lastChange = 0.0, 0.0, 0.0
     road, control, exitSeries = [], [], []
@@ -25,8 +24,9 @@ class Container:
 
 
     # initialize circle length
-    def __init__(self, l=1000.0):
+    def __init__(self, l=1000.0, duration=20000):
         self.circle = l
+	self.simulationTime = duration
 
 
     # normalization

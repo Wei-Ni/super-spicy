@@ -8,6 +8,8 @@ from projection import projection as proj
 
 class Container:
 
+    simulationTime = 20000
+    explorationProb = 0.8
     ABInterval, RLInterval = 25, 100
     lastControl, lastDescent, lastChange = 0.0, 0.0, 0.0
     road, control, exitSeries = [], [], []
@@ -58,20 +60,37 @@ class Container:
         return dot(vector, self.controlWeight)
 
 
+    # detect changing trend of a time series
+    def shouldIncreaseProb(self, time):
+        n = time / self.RLInterval
+        if n < 20: return False
+        else:
+            previous = mean(self.exitSeries[-30:-10])
+            current = mean(self.exitSeries[-20:])
+            if (current - previous) / previous <= 0.02:
+                return True
+            else: return False
+
+
     # learing Q function
     def sarsa(self, time):
-
         lastvector, actualTotalInflow = self.InflowVector()
         optimalvector = proj(self.controlWeight, 1.0)
 
-        # snapshoot
+        # snapshot
         accumulationNow = mean(self.accumulation[-1:]) # only for one simulation interval
         self.statusVector.append(self.accumVector * accumulationNow) # only for one simulation interval
         self.aggregatedExit.append(self.AverageExitFlow()) # averaged over the past RLInterval
         self.meteringVector.append(lastvector * actualTotalInflow) # averaged over the past RLInterval
         # snapshot
 
-        if rand() < 0.8 * (1 - time / self.simulationTime):
+        #self.explorationProb = 0.8 * (1 - time / self.simulationTime)
+        if self.shouldIncreaseProb(time):
+            self.explorationProb = max(self.explorationProb * 1.02, 1.0)
+        else:
+            self.explorationProb *= 0.98
+
+        if rand() < self.explorationProb:
             self.controlVector = proj(self.controlWeight + self.epsilon * randn(8), 1.0)
         else:
             self.controlVector = optimalvector
